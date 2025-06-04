@@ -1,0 +1,107 @@
+{% extends "base.html" %} {% block content %}
+<style></style>
+<div class="card mb-4">
+  <div
+    class="card-header text-white"
+    style="background-color: rgb(49, 116, 77)"
+  >
+    <h4 class="mb-0">Lead Filter</h4>
+  </div>
+  <div class="card-body">
+    <form id="filterForm" class="row g-3">
+      <div class="col-md-3">
+        <label for="project_id" class="form-label">Project ID</label>
+        <input
+          type="text"
+          class="form-control"
+          id="project_id"
+          name="project_id"
+        />
+      </div>
+      <div class="col-md-3">
+        <label for="project_name" class="form-label">Project Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="project_name"
+          name="project_name"
+        />
+      </div>
+      <div class="col-md-3">
+        <label for="page_url" class="form-label">Page URL</label>
+        <input type="text" class="form-control" id="page_url" name="page_url" />
+      </div>
+      <div class="col-md-2">
+        <label for="email_status" class="form-label">Email Status</label>
+        <select class="form-select" id="email_status" name="email_status">
+          <option value="">All</option>
+          <option value="done">Done</option>
+          <option value="failed">Failed</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label for="webhook_status" class="form-label">Webhook Status</label>
+        <select class="form-select" id="webhook_status" name="webhook_status">
+          <option value="">All</option>
+          <option value="done">Done</option>
+          <option value="failed">Failed</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label for="start_date" class="form-label">Start Date</label>
+        <input
+          type="date"
+          class="form-control"
+          id="start_date"
+          name="start_date"
+        />
+      </div>
+      <div class="col-md-2">
+        <label for="end_date" class="form-label">End Date</label>
+        <input type="date" class="form-control" id="end_date" name="end_date" />
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary me-2">
+          <i class="fas fa-filter"></i> Filter
+        </button>
+        <button type="button" class="btn btn-success" onclick="exportLeads()">
+          <i class="fas fa-file-export"></i> Export CSV
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header bg-secondary text-white">
+    <h4 class="mb-0">Recent Leads</h4>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <div id="leadsTable">{% include 'leads_table.html' %}</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document
+    .getElementById("filterForm")
+    .addEventListener("submit", function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const params = new URLSearchParams(formData).toString();
+
+      fetch(`/leads/filter?${params}`)
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById("leadsTable").innerHTML = html;
+        });
+    });
+
+  function exportLeads() {
+    const formData = new FormData(document.getElementById("filterForm"));
+    const params = new URLSearchParams(formData).toString();
+    window.location.href = `/leads/export?${params}`;
+  }
+</script>
+{% endblock %}
