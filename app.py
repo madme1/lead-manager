@@ -285,3 +285,12 @@ if __name__ == '__main__':
             db.session.commit()
     
     app.run(host='0.0.0.0',debug=True)
+with app.app_context():
+    if not User.query.filter_by(username='admin').first():
+        admin = User(
+            username='admin',
+            password_hash=generate_password_hash('master@admin789@#')
+        )
+        db.session.add(admin)
+        db.session.commit()
+        print("✅ Admin user created.")
