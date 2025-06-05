@@ -266,6 +266,33 @@ def create_user():
         return redirect(url_for('dashboard'))
     
     return render_template('create_user.html')
+@app.route('/leads/edit/<int:lead_id>', methods=['GET', 'POST'])
+@login_required
+def edit_lead(lead_id):
+    lead = Lead.query.get_or_404(lead_id)
+
+    if request.method == 'POST':
+        lead.domain = request.form.get('domain')
+        lead.name = request.form.get('name')
+        lead.mobile = request.form.get('mobile')
+        lead.email = request.form.get('email')
+        lead.email_status = request.form.get('email_status')
+        lead.webhook_status = request.form.get('webhook_status')
+        lead.project_id = request.form.get('project_id')
+        lead.project_name = request.form.get('project_name')
+        lead.page_url = request.form.get('page_url')
+
+        db.session.commit()
+        return redirect(url_for('dashboard'))
+
+    return render_template('edit_lead.html', lead=lead)
+@app.route('/leads/delete/<int:lead_id>', methods=['POST'])
+@login_required
+def delete_lead(lead_id):
+    lead = Lead.query.get_or_404(lead_id)
+    db.session.delete(lead)
+    db.session.commit()
+    return redirect(url_for('dashboard'))
 
 # Templates would go here in a real app, but we'll define basic ones for functionality
 @app.route('/templates/<template_name>')
