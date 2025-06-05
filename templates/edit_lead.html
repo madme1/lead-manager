@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card mb-4">
+  <div class="card-header text-white bg-primary">
+    <h4>Edit Lead</h4>
+  </div>
+  <div class="card-body">
+    <form method="POST">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="domain" class="form-label">Domain</label>
+          <input type="text" class="form-control" id="domain" name="domain" value="{{ lead.domain }}">
+        </div>
+        <div class="col-md-6">
+          <label for="name" class="form-label">Name</label>
+          <input type="text" class="form-control" id="name" name="name" value="{{ lead.name }}">
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="mobile" class="form-label">Mobile</label>
+          <input type="text" class="form-control" id="mobile" name="mobile" value="{{ lead.mobile }}">
+        </div>
+        <div class="col-md-6">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="email" name="email" value="{{ lead.email }}">
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="email_status" class="form-label">Email Status</label>
+          <select class="form-select" id="email_status" name="email_status">
+            <option value="done" {% if lead.email_status == 'done' %}selected{% endif %}>Done</option>
+            <option value="failed" {% if lead.email_status == 'failed' %}selected{% endif %}>Failed</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label for="webhook_status" class="form-label">Webhook Status</label>
+          <select class="form-select" id="webhook_status" name="webhook_status">
+            <option value="done" {% if lead.webhook_status == 'done' %}selected{% endif %}>Done</option>
+            <option value="failed" {% if lead.webhook_status == 'failed' %}selected{% endif %}>Failed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="project_id" class="form-label">Project ID</label>
+          <input type="text" class="form-control" id="project_id" name="project_id" value="{{ lead.project_id }}">
+        </div>
+        <div class="col-md-6">
+          <label for="project_name" class="form-label">Project Name</label>
+          <input type="text" class="form-control" id="project_name" name="project_name" value="{{ lead.project_name }}">
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="page_url" class="form-label">Page URL</label>
+        <input type="text" class="form-control" id="page_url" name="page_url" value="{{ lead.page_url }}">
+      </div>
+
+      <button type="submit" class="btn btn-success">Update Lead</button>
+      <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
