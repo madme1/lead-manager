@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Received Messages</title>
+  <style>
+    body, ul {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9fafb;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    main {
+      max-width: 600px;
+      width: 100%;
+      background: #fff;
+      box-shadow: 0 4px 15px rgb(0 0 0 / 0.1);
+      border-radius: 8px;
+      padding: 30px 40px;
+    }
+
+    h2 {
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 25px;
+      color: #2c3e50;
+      letter-spacing: 1px;
+    }
+
+    #messages {
+      list-style: none;
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 15px 20px;
+      background-color: #fafafa;
+      box-sizing: border-box;
+    }
+
+    #messages li {
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      background: #e8f0fe;
+      border-left: 4px solid #3b82f6;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #1f2937;
+      word-break: break-word;
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+      transition: background-color 0.3s ease;
+    }
+
+    #messages li:hover {
+      background-color: #dbeafe;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h2>Err-Logs</h2>
+    <ul id="messages"></ul>
+  </main>
+
+  <script>
+    const messagesList = document.getElementById('messages');
+
+    function fetchMessages() {
+      fetch('/get-err')
+        .then(response => response.json())
+        .then(data => {
+          messagesList.innerHTML = ''; // Clear current messages
+          // Newest first
+          data.reverse().forEach(msg => {
+            const li = document.createElement('li');
+            li.textContent = `[${new Date(msg.timestamp).toLocaleTimeString()}] ${msg.text}`;
+            messagesList.appendChild(li);
+          });
+        })
+        .catch(error => console.error('Error fetching messages:', error));
+    }
+
+    // Initial fetch and poll every 5 seconds
+    fetchMessages();
+    // setInterval(fetchMessages, 5000);
+  </script>
+</body>
+</html>
