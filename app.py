@@ -13,6 +13,7 @@ from flask import Response, stream_with_context
 import time
 import json
 
+
 clients = []
 clients_lock = threading.Lock()
 
@@ -111,12 +112,15 @@ def handle_submmision():
     name = data.get('name')
     email = data.get('email')
     mobile = data.get('mobile')
-    domain = request.host
+    domain = data.get('domain')
     page_url = request.referrer or 'unknown'
     account=data.get('account')
     project_name = data.get('project_name')
     project_id = data.get('project_id')
     send_to_email = data.get('send_to_email')
+    user_ip = data.get('user_ip') 
+    
+
 
     # Validation
     if not all([name, email, mobile, project_name, project_id]) or not send_to_email:
@@ -136,7 +140,8 @@ def handle_submmision():
         'webhook_status': 'failed',
         'project_id': project_id,
         'project_name': project_name,
-        'page_url': page_url
+        'page_url': page_url,
+        'user_ip':user_ip
     }
     # try:
     #     requests.post(flask_api_url, json=lead_payload)
@@ -273,7 +278,7 @@ def submit_lead():
         return jsonify({'status': 'error', 'message': 'No data received'}), 400
     
     # Get user IP
-    user_ip = request.remote_addr
+    user_ip = data.get('user_ip') or request.remote_addr
     
     # Create new lead
     new_lead = Lead(
