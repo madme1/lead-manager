@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><title>Sender</title></head>
+<body>
+<h2>Send a Message</h2>
+<textarea id="msg" rows="4" cols="50"></textarea><br>
+<button onclick="sendMessage()">Send</button>
+
+<script>
+async function sendMessage() {
+    const message = document.getElementById('msg').value;
+    if (!message.trim()) {
+        alert("Message can't be empty");
+        return;
+    }
+    const res = await fetch('/err_log', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message})
+    });
+    if (res.ok) {
+        document.getElementById('msg').value = '';
+        alert("Message sent");
+    } else {
+        alert("Error sending message");
+    }
+}
+</script>
+</body>
+</html>
