@@ -309,7 +309,8 @@ def filter_leads():
     webhook_status = request.args.get('webhook_status')
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')
-    page_url = request.args.get('page_url')  # NEW
+    page_url = request.args.get('page_url') 
+    domain = request.args.get('domain_name')
     
     query = Lead.query
     
@@ -326,7 +327,9 @@ def filter_leads():
     if end_date:
         query = query.filter(Lead.timestamp <= datetime.strptime(end_date, '%Y-%m-%d'))
     if page_url:
-        query = query.filter(Lead.page_url.contains(page_url))  # NEW
+        query = query.filter(Lead.page_url.contains(page_url))  # 
+    if domain:
+        query = query.filter(Lead.domain.contains(domain))
     leads = query.order_by(Lead.timestamp.desc()).all()
     
     return render_template('leads_table.html', leads=leads)
@@ -342,7 +345,7 @@ def export_leads():
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')
     page_url = request.args.get('page_url')  # NEW
-    
+    domain = request.args.get('domain_name')
     query = Lead.query
     
     if project_id:
@@ -359,6 +362,8 @@ def export_leads():
         query = query.filter(Lead.timestamp <= datetime.strptime(end_date, '%Y-%m-%d'))
     if page_url:
         query = query.filter(Lead.page_url.contains(page_url))  # NEW    
+    if domain:
+        query = query.filter(Lead.domain.contains(domain))
     
     leads = query.order_by(Lead.timestamp.desc()).all()
     
@@ -475,6 +480,7 @@ def edit_lead(lead_id):
         lead.project_id = request.form.get('project_id')
         lead.project_name = request.form.get('project_name')
         lead.page_url = request.form.get('page_url')
+        
 
         db.session.commit()
         return redirect(url_for('dashboard'))
