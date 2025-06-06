@@ -4,3 +4,4 @@ Flask-Login
 Werkzeug
 pandas
 gunicorn
+requests
